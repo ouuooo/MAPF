@@ -1,0 +1,6 @@
+{
+    //声明anaconda的安装地址
+    "python.pythonPath" :"D:\\softwares\\Anaconda\\python.exe",
+    //python语法检查
+    "python.linting.pylintPath": "pylint"
+}

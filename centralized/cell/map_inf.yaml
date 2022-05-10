@@ -1,0 +1,73 @@
+cell:
+-   location: [0, 0]
+    time: 4
+    lifter: 0
+    num: 0
+-   location: [1, 0]
+    time: 3
+    lifter: 0
+    num: 0
+-   location: [3, 0]
+    time: 3
+    lifter: 0
+    num: 1
+-   location: [4, 0]
+    time: 4
+    lifter: 0
+    num: 1
+-   location: [5, 0]
+    time: 4
+    lifter: 1
+    num: 2
+-   location: [6, 0]
+    time: 3
+    lifter: 1
+    num: 2
+-   location: [8, 0]
+    time: 3
+    lifter: 1
+    num: 3
+-   location: [9, 0]
+    time: 4
+    lifter: 1
+    num: 3
+-   location: [0, 1]
+    time: 5
+    lifter: 0
+    num: 4
+-   location: [1, 1]
+    time: 4
+    lifter: 0
+    num: 4
+-   location: [3, 1]
+    time: 4
+    lifter: 0
+    num: 5
+-   location: [4, 1]
+    time: 5
+    lifter: 0
+    num: 5
+-   location: [5, 1]
+    time: 5
+    lifter: 1
+    num: 6
+-   location: [6, 1]
+    time: 4
+    lifter: 1
+    num: 6
+-   location: [8, 1]
+    time: 4
+    lifter: 1
+    num: 7
+-   location: [9, 1]
+    time: 5
+    lifter: 1
+    num: 7
+map:
+    dimensions: [10, 2]
+    mainpath:
+    - !!python/tuple [2, 0]
+    - !!python/tuple [2, 1]
+    - !!python/tuple [7, 0]
+    - !!python/tuple [7, 1]
+
