@@ -35,11 +35,14 @@ def main():
         except yaml.YAMLError as exc:
             print(exc)
 
+    # {agents:[{start:[0,0],goal:[2,2],name:agent0}, {start:[2,2],goal:[0,0],name:agent1}],
+    #  map:{dimensions:[3,3], obstacles:[(0,1), (2,1)]}}
     for i in range(len(map["agents"])):
         sipp_planner = SippPlanner(map,i)
     
         if sipp_planner.compute_plan():
             plan = sipp_planner.get_plan()
+            # plan = {agent_name:path_list}
             output["schedule"].update(plan)
             map["dynamic_obstacles"].update(plan)
 

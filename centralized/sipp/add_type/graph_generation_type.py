@@ -64,6 +64,7 @@ class SippGraph(object):
         self.map = map
         self.dimensions = map["map"]["dimensions"]
 
+        self.main_path = [tuple(w) for w in map["map"]["main_path"]]
         self.obstacles = [tuple(v) for v in map["map"]["obstacles"]]        
         self.dyn_obstacles = map["dynamic_obstacles"]
 
@@ -116,17 +117,24 @@ class SippGraph(object):
         '''
         neighbour_list = []
 
-        up = (position[0], position[1]+1)
-        if self.is_valid_position(up): neighbour_list.append(up)
+        if position in self.main_path:
+            up = (position[0], position[1]+1)
+            if self.is_valid_position(up): neighbour_list.append(up)
 
-        down = (position[0], position[1]-1)
-        if self.is_valid_position(down): neighbour_list.append(down)
+            down = (position[0], position[1]-1)
+            if self.is_valid_position(down): neighbour_list.append(down)
 
-        left = (position[0]-1, position[1])
-        if self.is_valid_position(left): neighbour_list.append(left)
+            left = (position[0]-1, position[1])
+            if self.is_valid_position(left): neighbour_list.append(left)
 
-        right = (position[0]+1, position[1])
-        if self.is_valid_position(right): neighbour_list.append(right)
+            right = (position[0]+1, position[1])
+            if self.is_valid_position(right): neighbour_list.append(right)
+        else:
+            up = (position[0]+1, position[1])
+            if self.is_valid_position(up): neighbour_list.append(up)
+
+            down = (position[0]-1, position[1])
+            if self.is_valid_position(down): neighbour_list.append(down)
 
         return neighbour_list
 
