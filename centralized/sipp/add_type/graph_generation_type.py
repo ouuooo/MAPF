@@ -34,6 +34,7 @@ class SippGrid(object):
         output: 整理self.interval_list
         Function to generate safe-intervals
         """
+        m_time = 1
         for interval in self.interval_list:
             if last_t:
                 if t<=interval[0]:
@@ -42,21 +43,21 @@ class SippGrid(object):
                     continue
                 else:
                     self.interval_list.remove(interval)
-                    self.interval_list.append((interval[0], t-1))
+                    self.interval_list.append((interval[0], t-m_time))
             else:
                 if t == interval[0]:
                     self.interval_list.remove(interval)
                     if t+1 <= interval[1]:
-                        self.interval_list.append((t+1, interval[1]))
+                        self.interval_list.append((t+m_time, interval[1]))
                 elif t == interval[1]:
                     self.interval_list.remove(interval)
                     if t-1 <= interval[0]:
-                        self.interval_list.append((interval[0],t-1))
+                        self.interval_list.append((interval[0],t-m_time))
                 # 判断 t between interval[0] and interval[1]
                 elif bisect(interval,t) == 1:
                     self.interval_list.remove(interval)
-                    self.interval_list.append((interval[0], t-1))
-                    self.interval_list.append((t+1, interval[1]))
+                    self.interval_list.append((interval[0], t-m_time))
+                    self.interval_list.append((t+m_time, interval[1]))
             self.interval_list.sort()
 
 class SippGraph(object):
