@@ -20,6 +20,9 @@ class State(object):
         # position在t时刻占用self.sipp_graph[neighbour].interval_list中的interval
         # 用来记录agent在position可以待的时间[t, interval[1]]
 
+    def __lt__(self, other):
+        return self.time<other.time
+
 class SippGrid(object):
     def __init__(self):
         # self.position = ()
@@ -34,7 +37,7 @@ class SippGrid(object):
         output: 整理self.interval_list
         Function to generate safe-intervals
         """
-        m_time = 1
+        m_time = 3
         for interval in self.interval_list:
             if last_t:
                 if t<=interval[0]:

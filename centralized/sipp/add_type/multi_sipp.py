@@ -49,15 +49,16 @@ def full_cell(agents, mainpath, obstacles, dimension):
             if (x, local[1]) in obstacles:
                 obstacles.remove((x, local[1]))
             x+=1
-    
-    obs = random.sample(obstacles, int(len(obstacles)/3))
+            
+    # 障碍数目
+    obs = random.sample(obstacles, int(len(obstacles)/1))
     return obs
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("map", help="input file containing map and dynamic obstacles")
-    parser.add_argument("output", help="output file with the schedule")
+    parser.add_argument("--map", help="input file containing map and dynamic obstacles", default="centralized\\sipp\\add_type\\data\\warehouse_input_30x30_10.yaml")
+    parser.add_argument("--output", help="output file with the schedule", default="centralized\\sipp\\add_type\\data\\warehouse_output_10.yaml")
     
     args = parser.parse_args()
     

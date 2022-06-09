@@ -66,7 +66,7 @@ class Animation:
     # self.ax.axis('on')
 
     self.patches.append(Rectangle((xmin, ymin), xmax - xmin, ymax - ymin, facecolor='none', edgecolor='gray'))
-    mainpath = find_coordinate(map["map"]["detail"], 'o')
+    mainpath = find_coordinate(map["map"]["detail"], ['o','t'])
     for o in mainpath:
       x, y = o[0], o[1]
       self.patches.append(Rectangle((x - 0.5, y - 0.5), 1, 1, facecolor='gray', edgecolor='white'))
@@ -168,15 +168,16 @@ class Animation:
     return pos
 
 
-def find_coordinate(map, symple):
+def find_coordinate(map, symples):
     result = []
-    for index1, value1 in enumerate(map):
-        if symple in value1:
-            row = index1
-            for index2,value2 in enumerate(list(map[index1])):
-                if symple == value2:
-                    column = index2
-                    result.append((column, row))
+    for symple in symples:
+      for index1, value1 in enumerate(map):
+          if symple in value1:
+              row = index1
+              for index2,value2 in enumerate(list(map[index1])):
+                  if symple == value2:
+                      column = index2
+                      result.append((column, row))
     return result
 
 

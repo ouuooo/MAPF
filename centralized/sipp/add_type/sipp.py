@@ -9,9 +9,12 @@ See the article: DOI: 10.1109/ICRA.2011.5980306
 """
 
 import argparse
+from turtle import position
+from numpy import sort
 import yaml
 from math import fabs
 from graph_generation_type import SippGraph, State
+import heapq
 
 
 class SippPlanner(SippGraph):
@@ -31,7 +34,7 @@ class SippPlanner(SippGraph):
         output: neighbours-->list(State())
         '''
         successors = []
-        m_time = 1      # 保护间隔时间
+        m_time = 1      # stemp_cost_time
         # 找到neighbours坐标
         neighbour_list = self.get_valid_neighbours(state.position)
 
@@ -74,14 +77,15 @@ class SippPlanner(SippGraph):
         self.sipp_graph[self.start].f = f_start     # self.sipp_graph[start]--> SippGrid()
 
         # 将起点加入到open_list
-        self.open.append((f_start, s_start))
+        heapq.heappush(self.open, (f_start, s_start))
+        # self.open.append((f_start, s_start))
 
         while (not goal_reached):
             if self.open == {}: 
                 # Plan not found
                 return 0
             # s = (self.open.pop(0))[1] = s_start--> State()
-            s = self.open.pop(0)[1]
+            s = heapq.heappop(self.open)[1]     # 为什么没有排序
             # 计算邻接点
             successors = self.get_successors(s)
     
@@ -92,23 +96,48 @@ class SippPlanner(SippGraph):
                     self.sipp_graph[successor.position].g = self.sipp_graph[s.position].g + cost
                     self.sipp_graph[successor.position].parent_state = s
 
+                    turn_cost = 0
+                    if successor.position != self.start:
+                        before_p = self.sipp_graph[s.position].parent_state.position
+                        next_p = successor.position
+                        if (before_p[0]-next_p[0])*(before_p[1]-next_p[1]):
+                            # 转弯耗费代价
+                            turn_cost = 3
+
                     if successor.position == self.goal:
                         print("Plan successfully calculated!!")
                         goal_reached = True
                         break
 
-                    self.sipp_graph[successor.position].f = self.sipp_graph[successor.position].g + self.get_heuristic(successor.position)
-                    self.open.append((self.sipp_graph[successor.position].f, successor))
+                    self.sipp_graph[successor.position].f = self.sipp_graph[successor.position].g + self.get_heuristic(successor.position) + turn_cost
+                    heapq.heappush(self.open, (self.sipp_graph[successor.position].f, successor))
+                    # self.open.append((self.sipp_graph[successor.position].f, successor))
+                    # bisect.insort(self.open, (self.sipp_graph[successor.position].f, successor))
 
         # Tracking back
         start_reached = False
-        self.plan = []
-        current = successor
+        plan = []
+        current = successor     # goal
         while not start_reached:
-            self.plan.insert(0,current)
+            plan.insert(0,current)
             if current.position == self.start:
                 start_reached = True
             current = self.sipp_graph[current.position].parent_state
+
+        # 增加转弯等待
+        count_time = 0
+        self.plan = []
+        for index,current in enumerate(plan):
+            # count_time += 1
+            self.plan.append(State(current.position, current.time+count_time))
+            if current.position != self.goal and current.position != self.start:
+                after_position = plan[index+1].position
+                before_posiont = plan[index-1].position
+                if (after_position[0]-before_posiont[0])*(after_position[1]-before_posiont[1]) != 0:
+                    count_time += 1
+                    self.plan.append(State(current.position, current.time+count_time))
+
+
         return 1
             
     def get_plan(self):
