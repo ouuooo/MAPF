@@ -15,6 +15,7 @@ from graph_generation_type import SippGraph, State
 from sipp import SippPlanner
 import random
 import time
+import visualize_full
 
 
 def find_coordinate(map, symple):
@@ -51,14 +52,16 @@ def full_cell(agents, mainpath, obstacles, dimension):
             x+=1
             
     # 障碍数目
-    obs = random.sample(obstacles, int(len(obstacles)/1))
+    obs = random.sample(obstacles, int(len(obstacles)/3))
     return obs
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--map", help="input file containing map and dynamic obstacles", default="centralized\\sipp\\add_type\\data\\warehouse_input_30x30_10.yaml")
-    parser.add_argument("--output", help="output file with the schedule", default="centralized\\sipp\\add_type\\data\\warehouse_output_10.yaml")
+    data_map = r"centralized\sipp\add_type\data\warehouse_input_30x30_10_state.yaml"
+    data_output = r"centralized\sipp\add_type\data\warehouse_output_10.yaml"
+    parser.add_argument("--map", help="input file containing map and dynamic obstacles", default=data_map)
+    parser.add_argument("--output", help="output file with the schedule", default=data_output)
     
     args = parser.parse_args()
     
@@ -92,9 +95,11 @@ def main():
     #  map:{dimensions:[3,3], obstacles:[(0,1), (2,1)]}}
     for i in range(len(map["agents"])):
         sipp_planner = SippPlanner(map,i)
+        if map["agents"][i]["state"] == 0:
+            sipp_planner.obstacles = []
     
         if sipp_planner.compute_plan():
-            plan = sipp_planner.get_plan()
+            plan,_ = sipp_planner.get_plan()
             # plan = {agent_name:path_list}
             output["schedule"].update(plan)
             map["dynamic_obstacles"].update(plan)
@@ -103,6 +108,8 @@ def main():
                 yaml.safe_dump(output, output_yaml)  
         else: 
             print("Plan not found")
+    
+    # visualize_full.visual(map, output)
 
 
 start = time.time()

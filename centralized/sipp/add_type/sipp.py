@@ -9,8 +9,6 @@ See the article: DOI: 10.1109/ICRA.2011.5980306
 """
 
 import argparse
-from turtle import position
-from numpy import sort
 import yaml
 from math import fabs
 from graph_generation_type import SippGraph, State
@@ -161,8 +159,19 @@ class SippPlanner(SippGraph):
             temp_dict = {"x":setpoint.position[0], "y":setpoint.position[1], "t":setpoint.time}
             path_list.append(temp_dict)
 
+        # 修改输出格式
+        path_turn = []
+        for i in range(len(path_list)):
+            # 加上起点和终点
+            if i == 0 or i ==len(path_list)-1:
+                path_turn.append(path_list[i])
+            elif path_list[i-1]['x'] == path_list[i]['x'] and path_list[i-1]['y'] == path_list[i]['y']:
+                path_turn.append(path_list[i])
+        #print(path_list)
+        data_wait = {self.name:path_turn}
+        
         data = {self.name:path_list}
-        return data
+        return data, data_wait
 
 
 

@@ -17,7 +17,7 @@ import imageio
 Colors = ['orange', 'blue', 'green']
 
 
-class Animation:
+class Animation_video:
   def __init__(self, map, schedule):
     self.map = map
     self.schedule = schedule
@@ -203,11 +203,18 @@ def full_cell(agents, mainpath, obstacles, dimension):
     obs = random.sample(obstacles, 1000)
     return obs
 
+def visual(map, schedule):
+  animation = Animation_video(map, schedule)
+
+  animation.show()
+
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
-  parser.add_argument("map", help="input file containing map")
-  parser.add_argument("schedule", help="schedule for agents")
+  data_map = r"centralized\sipp\add_type\data\warehouse_input_30x30_10_state.yaml"
+  data_output = r"centralized\sipp\add_type\data\warehouse_output_10.yaml"
+  parser.add_argument("--map", help="input file containing map and dynamic obstacles", default=data_map)
+  parser.add_argument("--schedule", help="schedule for agents", default=data_output)
   parser.add_argument('--video', dest='video', default=None, help="output video file (or leave empty to show on screen)")
   parser.add_argument("--speed", type=int, default=200, help="speedup-factor")
   args = parser.parse_args()
@@ -219,7 +226,7 @@ if __name__ == "__main__":
   with open(args.schedule) as states_file:
     schedule = yaml.load(states_file, Loader=yaml.FullLoader)
 
-  animation = Animation(map, schedule)
+  animation = Animation_video(map, schedule)
 
   if args.video:
     animation.save(args.video, args.speed)
